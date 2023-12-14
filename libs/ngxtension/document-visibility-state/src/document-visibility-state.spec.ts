@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { injectDocumentVisibility } from './inject-document-visibility';
+import { injectDocumentVisibility } from './document-visibility-state';
 
 describe(injectDocumentVisibility.name, () => {
 	@Component({ standalone: true, template: '{{visibilityState()}}' })
