@@ -1,9 +1,9 @@
 ---
 title: Intl
 description: Additional Intl Utilities for formatting numbers, strings, and other objects.
-entryPoint: intl
+entryPoint: ngxtension/intl
 badge: stable
-contributor: ion-prodan
+contributors: ['ion-prodan']
 ---
 
 This is a collection of pipes designed for Angular applications that leverage the [Intl API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl).

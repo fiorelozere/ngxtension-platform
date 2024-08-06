@@ -26,6 +26,9 @@ type ConnectedSignal<TSignalValue> = {
 		observable: Observable<TObservableValue>,
 		reducer: Reducer<TSignalValue, TObservableValue>,
 	): ConnectedSignal<TSignalValue>;
+	with<TOriginSignalValue extends PartialOrValue<TSignalValue>>(
+		originSignal: () => TOriginSignalValue,
+	): ConnectedSignal<TSignalValue>;
 	subscription: Subscription;
 };
 
@@ -116,11 +119,18 @@ export function connect(signal: WritableSignal<unknown>, ...args: any[]) {
 		return observable.pipe(takeUntilDestroyed(destroyRef)).subscribe((x) => {
 			const update = () => {
 				signal.update((prev) => {
-					if (typeof prev === 'object' && !Array.isArray(prev)) {
-						return { ...prev, ...((reducer?.(prev, x) || x) as object) };
+					if (!isObject(prev)) {
+						return reducer?.(prev, x) || x;
 					}
 
-					return reducer?.(prev, x) || x;
+					if (!isObject(x)) {
+						const reducedValue = reducer ? reducer(prev, x) : x;
+						return isObject(reducedValue)
+							? { ...prev, ...(reducedValue as object) }
+							: reducedValue;
+					}
+
+					return { ...prev, ...((reducer?.(prev, x) || x) as object) };
 				});
 			};
 
@@ -138,10 +148,21 @@ export function connect(signal: WritableSignal<unknown>, ...args: any[]) {
 				? assertInjector(connect, injectorOrDestroyRef)
 				: undefined;
 
-		return effect(() => signal.set(originSignal()), {
-			allowSignalWrites: true,
-			injector,
-		});
+		return effect(
+			() => {
+				signal.update((prev) => {
+					if (!isObject(prev)) {
+						return originSignal();
+					}
+
+					return { ...prev, ...(originSignal() as object) };
+				});
+			},
+			{
+				allowSignalWrites: true,
+				injector,
+			},
+		);
 	}
 
 	return {
@@ -188,13 +209,23 @@ function parseArgs(
 
 	if (args.length === 3) {
 		if (typeof args[2] === 'boolean') {
-			return [
-				args[0] as Observable<unknown>,
-				null,
-				args[1] as Injector | DestroyRef,
-				args[2],
-				null,
-			];
+			if (isObservable(args[0])) {
+				return [
+					args[0] as Observable<unknown>,
+					null,
+					args[1] as Injector | DestroyRef,
+					args[2],
+					null,
+				];
+			} else {
+				return [
+					null,
+					null,
+					args[1] as Injector | DestroyRef,
+					args[2],
+					args[0] as () => unknown,
+				];
+			}
 		}
 
 		return [
@@ -234,9 +265,19 @@ function parseArgs(
 		return [args[0] as Observable<unknown>, null, null, false, null];
 	}
 
+	// to connect signals to other signals, we need to use a callback that includes a signal call
 	if (typeof args[0] === 'function') {
 		return [null, null, null, false, args[0] as () => unknown];
 	}
 
 	return [null, null, args[0] as Injector | DestroyRef, false, null];
+}
+
+function isObject(val: any): val is object {
+	return (
+		typeof val === 'object' &&
+		val !== undefined &&
+		val !== null &&
+		!Array.isArray(val)
+	);
 }

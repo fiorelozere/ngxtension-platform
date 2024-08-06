@@ -1,9 +1,9 @@
 ---
 title: createInjectionToken
 description: Create an InjectionToken and return an injectFn and provideFn for it as well.
-entryPoint: create-injection-token
+entryPoint: ngxtension/create-injection-token
 badge: stable
-contributor: chau-tran
+contributors: ['chau-tran']
 ---
 
 `createInjectionToken` is an abstraction over the creation of an [`InjectionToken`](https://angular.io/api/core/InjectionToken) and returns a tuple of `[injectFn, provideFn, TOKEN]`

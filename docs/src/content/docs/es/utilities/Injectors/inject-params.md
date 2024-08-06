@@ -3,7 +3,7 @@ title: injectParams
 description: ngxtension/inject-params
 badge: stable
 entryPoint: inject-params
-contributor: enea-jahollari
+contributors: ['enea-jahollari']
 ---
 
 `injectParams` es una función auxiliar que nos permite inyectar parámetros de la ruta actual como una signal.
@@ -43,7 +43,7 @@ Si queremos obtener el valor de un parámetro específico, podemos pasar el nomb
 class TestComponent {
 	userId = injectParams('id'); // devuelve una signal con el valor del parámetro de ruta id
 
-	user = computedFrom(
+	user = derivedFrom(
 		[this.userId],
 		switchMap((id) => this.userService.getUser(id).pipe(startWith(null))),
 	);

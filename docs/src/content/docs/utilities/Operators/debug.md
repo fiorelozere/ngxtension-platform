@@ -1,9 +1,9 @@
 ---
 title: debug
 description: An RxJS operator that helps to debug what happens in an observable pipeline, it'll console.log all emitted values + final events (console.warn completed or console.error).
-entryPoint: debug
+entryPoint: ngxtension/debug
 badge: stable
-contributor: daniele-morosinotto
+contributors: ['daniele-morosinotto']
 ---
 
 ## Import

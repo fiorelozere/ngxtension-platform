@@ -1,8 +1,13 @@
-import { type ApplicationConfig } from '@angular/core';
+import {
+	provideExperimentalZonelessChangeDetection,
+	type ApplicationConfig,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideSvgSprites } from 'ngxtension/svg-sprite';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
+		provideExperimentalZonelessChangeDetection(),
 		provideRouter([
 			{
 				path: 'resize',
@@ -39,6 +44,35 @@ export const appConfig: ApplicationConfig = {
 			{
 				path: 'control-error',
 				loadComponent: () => import('./control-error/control-error.component'),
+			},
+			{
+				path: 'svg-sprite',
+				loadComponent: () => import('./svg-sprite/svg-sprite.component'),
+				providers: [
+					provideSvgSprites(
+						{
+							name: 'fa-regular',
+							baseUrl: 'assets/fontawesome/sprites/regular.svg',
+						},
+						{
+							name: 'fa-solid',
+							baseUrl: 'assets/fontawesome/sprites/solid.svg',
+						},
+						{
+							name: 'fa-brands',
+							baseUrl: 'assets/fontawesome/sprites/brands.svg',
+						},
+					),
+				],
+			},
+			{
+				path: 'form-events',
+				loadComponent: () => import('./form-events/form-events.component'),
+			},
+			{
+				path: 'control-value-accessor',
+				loadComponent: () =>
+					import('./control-value-accessor/control-value-accessor'),
 			},
 		]),
 	],

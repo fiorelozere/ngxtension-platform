@@ -16,7 +16,7 @@ Thank you for considering contributing to ngxtension! We welcome your contributi
 
 ## Code of Conduct
 
-Before we start, please note that this project and its contributors are expected to follow the [Angular Community Code of Conduct](https://angular.io/community-code-of-conduct). Please be respectful and considerate when interacting with other contributors.
+Before we start, please note that this project and its contributors are expected to follow the [Angular Community Code of Conduct](https://github.com/angular/code-of-conduct/blob/main/CODE_OF_CONDUCT.md). Please be respectful and considerate when interacting with other contributors.
 
 ## How to Contribute
 
@@ -47,6 +47,7 @@ To contribute code to ngxtension, follow these steps:
 6. Create a pull request (PR) from your branch to the `main` branch of the `ngxtension-platform` repository on GitHub.
 7. Commit your changes following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) convention.
 8. Provide a clear title and description for your PR, explaining the purpose and scope of your changes.
+9. In order that your changes are also publicly visible on our website make sure that you also add docs to the respective category in `docs/src/content/docs/utilities`.
 
 We will review your PR as soon as possible, and your contribution will be greatly appreciated!
 

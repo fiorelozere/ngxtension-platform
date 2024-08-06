@@ -5,7 +5,7 @@
 	"engines": {
 		"node": ">=18"
 	},
-	"repository": "nartc/ngxtension-platform",
+	"repository": "ngxtension/ngxtension-platform",
 	"homepage": "https://ngxtension.netlify.app",
 	"license": "MIT",
 	"keywords": [
@@ -23,10 +23,17 @@
 		"@use-gesture/vanilla": "^10.0.0",
 		"rxjs": "^6.0.0 || ^7.0.0"
 	},
+	"peerDependenciesMeta": {
+		"@use-gesture/vanilla": {
+			"optional": true
+		}
+	},
 	"dependencies": {
-		"@nx/devkit": "^17.0.0",
-		"nx": "^17.0.0",
-		"tslib": "^2.3.0"
+		"tslib": "^2.3.0",
+		"@angular-eslint/bundled-angular-compiler": "^18.0.1",
+		"@nx/devkit": "^19.0.0",
+		"nx": "^19.0.0",
+		"ts-morph": "^22.0.0"
 	},
 	"sideEffects": false,
 	"generators": "./plugin/generators.json",

@@ -8,15 +8,18 @@ const contributors = defineCollection({
 		twitter: z.string().url().optional(),
 		linkedin: z.string().url().optional(),
 		github: z.string().url().optional(),
+		website: z.string().url().optional(),
 	}),
 });
 
 const docs = defineCollection({
 	schema: (ctx) =>
 		docsSchema()(ctx).extend({
-			badge: z.enum(['stable', 'unstable', 'experimental']).optional(),
+			badge: z
+				.enum(['stable', 'unstable', 'experimental', 'deprecated'])
+				.optional(),
 			entryPoint: z.string().optional(),
-			contributor: reference('contributors').optional(),
+			contributors: z.array(reference('contributors')).optional(),
 		}),
 });
 

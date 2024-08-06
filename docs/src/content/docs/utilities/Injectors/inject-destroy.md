@@ -1,9 +1,9 @@
 ---
 title: injectDestroy
 description: ngxtension/inject-destroy
-entryPoint: inject-destroy
+entryPoint: ngxtension/inject-destroy
 badge: stable
-contributor: enea-jahollari
+contributors: ['enea-jahollari']
 ---
 
 `injectDestroy` is a helper function that returns an observable that emits when the component is destroyed.

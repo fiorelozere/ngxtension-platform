@@ -54,6 +54,57 @@ describe(connect.name, () => {
 				});
 			});
 		});
+
+		it('should allow connecting with a partial value from signal', () => {
+			const state = signal({
+				user: {
+					firstName: 'chau',
+					lastName: 'tran',
+				},
+				age: 30,
+				likes: ['angular', 'typescript'],
+			});
+
+			TestBed.runInInjectionContext(() => {
+				const sourceSignalOne = signal({
+					user: { firstName: 'Chau', lastName: 'Tran' },
+				});
+				const expectedOne = {
+					...state(),
+					user: { firstName: 'Chau', lastName: 'Tran' },
+				};
+				const connectedSignal = connect(state).with(() => sourceSignalOne());
+				TestBed.flushEffects();
+				expect(state()).toEqual(expectedOne);
+
+				const sourceSignalTwo = signal({ age: 32 });
+				const expectedTwo = { ...expectedOne, age: 32 };
+				connectedSignal.with(() => sourceSignalTwo());
+				TestBed.flushEffects();
+				expect(state()).toEqual(expectedTwo);
+
+				sourceSignalOne.set({
+					user: { firstName: 'Josh', lastName: 'Morony' },
+				});
+				const expectedThree = {
+					...expectedTwo,
+					user: { firstName: 'Josh', lastName: 'Morony' },
+				};
+				TestBed.flushEffects();
+				expect(state()).toEqual(expectedThree);
+			});
+		});
+
+		it('should allow connecting primitive value', () => {
+			const state = signal(4);
+
+			TestBed.runInInjectionContext(() => {
+				const sourceSignalOne = signal(5);
+				connect(state).with(() => sourceSignalOne());
+				TestBed.flushEffects();
+				expect(state()).toEqual(5);
+			});
+		});
 	});
 
 	describe('connects an observable to a signal in injection context', () => {
@@ -62,11 +113,19 @@ describe(connect.name, () => {
 			count = signal(0);
 			source$ = new Subject<number>();
 
+			objectSignal = signal<any>({});
+			reducerSignal = signal<any>({});
+			objectSource$ = new Subject<any>();
+
 			// this works too
 			// sub = connect(this.count, this.source$.pipe(take(2)));
 
 			constructor() {
 				connect(this.count, this.source$.pipe(take(2)));
+				connect(this.objectSignal, this.objectSource$);
+				connect(this.reducerSignal, this.objectSource$, (_, curr) => {
+					return curr;
+				});
 			}
 		}
 
@@ -89,6 +148,34 @@ describe(connect.name, () => {
 
 			component.source$.next(3);
 			expect(component.count()).toBe(2); // should not change because we only took 2 values
+		});
+
+		it('correctly updates from literal object values to non-literal object values', () => {
+			component.objectSource$.next(null);
+			expect(component.objectSignal()).toEqual(null);
+
+			component.objectSource$.next({});
+			expect(component.objectSignal()).toEqual({});
+
+			component.objectSource$.next('test');
+			expect(component.objectSignal()).toEqual('test');
+
+			component.objectSource$.next({});
+			component.objectSource$.next(1);
+			expect(component.objectSignal()).toEqual(1);
+
+			component.objectSource$.next({});
+			component.objectSource$.next(undefined);
+			expect(component.objectSignal()).toEqual(undefined);
+
+			component.objectSource$.next({});
+			component.objectSource$.next([]);
+			expect(component.objectSignal()).toEqual([]);
+		});
+
+		it('correctly updates from object literal object values with reducer', () => {
+			component.objectSource$.next(null);
+			expect(component.reducerSignal()).toEqual(null);
 		});
 	});
 
@@ -232,6 +319,42 @@ describe(connect.name, () => {
 		});
 	});
 
+	describe('connects an observable to a signal in injection context', () => {
+		@Component({ standalone: true, template: '' })
+		class TestComponent {
+			count = signal(0);
+			source$ = new Subject<number>();
+
+			// this works too
+			// sub = connect(this.count, this.source$.pipe(take(2)));
+
+			constructor() {
+				connect(this.count, this.source$.pipe(take(2)));
+			}
+		}
+
+		let component: TestComponent;
+		let fixture: ComponentFixture<TestComponent>;
+
+		beforeEach(async () => {
+			fixture = TestBed.createComponent(TestComponent);
+			component = fixture.componentInstance;
+		});
+
+		it('works fine', () => {
+			expect(component.count()).toBe(0);
+
+			component.source$.next(1);
+			expect(component.count()).toBe(1);
+
+			component.source$.next(2);
+			expect(component.count()).toBe(2);
+
+			component.source$.next(3);
+			expect(component.count()).toBe(2); // should not change because we only took 2 values
+		});
+	});
+
 	describe('connects an observable to a signal not in injection context using injector', () => {
 		@Component({ standalone: true, template: '' })
 		class TestComponent implements OnInit {
@@ -332,6 +455,49 @@ describe(connect.name, () => {
 
 			component.source$.next(3);
 			expect(component.count()).toBe(1); // should not change
+		});
+	});
+
+	describe('connects an observable with single emit to a null signal in injection context', () => {
+		@Component({ standalone: true, template: '' })
+		class TestComponent {
+			text = signal<string | null>(null);
+
+			constructor() {
+				connect(this.text, of('text'));
+			}
+		}
+
+		let component: TestComponent;
+		let fixture: ComponentFixture<TestComponent>;
+
+		beforeEach(async () => {
+			fixture = TestBed.createComponent(TestComponent);
+			component = fixture.componentInstance;
+		});
+		it('works fine', () => {
+			expect(component.text()).toBe('text');
+		});
+	});
+	describe('connects an observable with multiple emits to a null signal in injection context', () => {
+		@Component({ standalone: true, template: '' })
+		class TestComponent {
+			text = signal<string | null>(null);
+
+			constructor() {
+				connect(this.text, of('text', null, 'text2'));
+			}
+		}
+
+		let component: TestComponent;
+		let fixture: ComponentFixture<TestComponent>;
+
+		beforeEach(async () => {
+			fixture = TestBed.createComponent(TestComponent);
+			component = fixture.componentInstance;
+		});
+		it('works fine', () => {
+			expect(component.text()).toBe('text2');
 		});
 	});
 });

@@ -32,11 +32,25 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 				<a routerLink="/active-element">Active Element</a>
 			</li>
 			<li>
-				<a routerLink="/document-visibility-state">Document Visibility State</a>
+				<a routerLink="/inject-document-visibility">
+					Document Visibility State
+				</a>
 			</li>
 
 			<li>
 				<a routerLink="/control-error">Control Error</a>
+			</li>
+
+			<li>
+				<a routerLink="/svg-sprite">Svg Sprite</a>
+			</li>
+
+			<li>
+				<a routerLink="/control-value-accessor">Control Value Accessor</a>
+			</li>
+
+			<li>
+				<a routerLink="/form-events">Form Events</a>
 			</li>
 		</ul>
 

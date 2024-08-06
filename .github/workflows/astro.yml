@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
+      - '.github/workflows/astro.yml'
 
 jobs:
   build-docs:
@@ -33,10 +34,12 @@ jobs:
       - name: Create local build artifacts
         run: |
           echo "Building documentation..."
-          pnpm exec nx package docs
+          pnpm exec nx package docs --skip-nx-cache
 
       - name: Init git and commit local artifacts
         run: |
+          ls -la
+          ls -la docs
           cd docs/dist
           git init
           git add .
@@ -47,7 +50,7 @@ jobs:
       - name: Push
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_ACTION_TOKEN }}
           branch: astro-docs
           force: true
           directory: docs/dist

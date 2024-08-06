@@ -38,7 +38,7 @@ export function injectParams<T>(
 ): Signal<T | Params | string | null> {
 	assertInInjectionContext(injectParams);
 	const route = inject(ActivatedRoute);
-	const params = route.snapshot.params || {};
+	const params = route.snapshot.params;
 
 	if (typeof keyOrTransform === 'function') {
 		return toSignal(route.params.pipe(map(keyOrTransform)), {

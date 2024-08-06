@@ -1,9 +1,9 @@
 ---
 title: reduceArray
 description: An RxJS operator designed to apply a reduce function to an array within an Observable stream, simplifying array transformations.
-entryPoint: reduce-array
+entryPoint: ngxtension/reduce-array
 badge: stable
-contributor: tomer
+contributors: ['tomer']
 ---
 
 ## Import

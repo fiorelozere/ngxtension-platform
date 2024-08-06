@@ -3,7 +3,7 @@ title: injectQueryParams
 description: ngxtension/inject-query-params
 badge: stable
 entryPoint: inject-query-params
-contributor: enea-jahollari
+contributors: ['enea-jahollari']
 ---
 
 `injectQueryParams` es una función auxiliar que nos permite inyectar parámetros de la ruta actual como una signal.
@@ -45,7 +45,7 @@ Si queremos obtener el valor de un query param específico, podemos pasar el nom
 class TestComponent {
 	searchParam = injectQueryParams('search'); // devuelve una signal con el valor del query param search
 
-	filteredUsers = computedFrom(
+	filteredUsers = derivedFrom(
 		[this.searchParam],
 		switchMap((searchQuery) =>
 			this.userService.getUsers(searchQuery).pipe(startWith([])),

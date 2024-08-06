@@ -12,14 +12,17 @@ export default defineConfig({
 		starlight({
 			title: 'ngxtension',
 			logo: {
-				src: './public/logo.svg',
+				light: './public/ngxtension-blue.svg',
+				dark: './public/ngxtension-white.svg',
 				alt: 'ngxtension logo',
+				replacesTitle: true,
 			},
-			favicon: './logo.svg',
+			favicon: './ngxt-blue.svg',
 			social: {
 				github: 'https://github.com/nartc/ngxtension-platform',
 				twitter: 'https://twitter.com/Nartc1410',
 			},
+			customCss: ['./src/styles/custom.css'],
 			lastUpdated: true,
 			sidebar: [
 				{
@@ -43,10 +46,15 @@ export default defineConfig({
 					},
 					link: '/dep-graph',
 				},
+				{
+					label: 'Press Kit',
+					link: '/logos/logos',
+				},
 			],
 			components: {
 				PageTitle: './src/components/PageTitle.astro',
 				MarkdownContent: './src/components/Content.astro',
+				Sidebar: './src/components/Sidebar.astro',
 			},
 			defaultLocale: 'root',
 			locales,
